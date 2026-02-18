@@ -5,6 +5,7 @@ import { AddTransaction } from './pages/AddTransaction';
 import { Insights } from './pages/Insights';
 import { Chat } from './pages/Chat';
 import { Goals } from './pages/Goals';
+import { Settings } from './pages/Settings';
 import { BottomNav } from './components/BottomNav';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/insights" element={<Insights />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/goals" element={<Goals />} />
+            <Route path="/settings" element={<Settings />} />
           </Routes>
           <BottomNav />
         </div>

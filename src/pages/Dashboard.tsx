@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BalanceCard } from '../components/BalanceCard';
 import { AIInsightCard } from '../components/AIInsightCard';
 import { TransactionItem } from '../components/TransactionItem';
 import { CategoryCard } from '../components/CategoryCard';
 import { useTransactions } from '../hooks/useTransactions';
+import { useBankAccounts } from '../hooks/useBankAccounts';
 import { Transaction } from '../types';
+import { Settings, Zap } from 'lucide-react';
 
 export const Dashboard = () => {
+  const navigate = useNavigate();
   const { transactions } = useTransactions();
+  const { accounts } = useBankAccounts();
   const [balance, setBalance] = useState(4280.5);
   const [income, setIncome] = useState(5200);
   const [spent, setSpent] = useState(0);
   const [saved, setSaved] = useState(0);
   const [categories, setCategories] = useState<Record<string, number>>({});
+  const hasBankConnected = accounts.length > 0 && accounts.some((a) => a.is_connected);
 
   useEffect(() => {
     // Calculate totals
@@ -60,10 +66,31 @@ export const Dashboard = () => {
             <p className="text-white/60 text-sm">Welcome back,</p>
             <h1 className="text-2xl font-syne font-bold">Jordan</h1>
           </div>
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent-purple to-accent-pink flex items-center justify-center">
-            <span className="text-xl">✦</span>
-          </div>
+          <button
+            onClick={() => navigate('/settings')}
+            className="p-3 hover:bg-white/10 rounded-full transition-colors"
+          >
+            <Settings size={24} className="text-white" />
+          </button>
         </div>
+
+        {!hasBankConnected && (
+          <div className="glass-card p-4 mb-6 border-l-4 border-l-accent-purple">
+            <div className="flex items-start gap-3">
+              <Zap className="text-accent-purple flex-shrink-0 mt-1" size={20} />
+              <div className="flex-1">
+                <p className="text-white font-semibold text-sm mb-1">Connect Your Bank</p>
+                <p className="text-white/60 text-xs mb-3">Auto-sync transactions and keep your balance accurate</p>
+                <button
+                  onClick={() => navigate('/settings')}
+                  className="text-accent-purple text-sm font-semibold hover:text-accent-pink transition-colors"
+                >
+                  Connect Now →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <BalanceCard balance={balance} income={income} spent={spent} saved={saved} />
 
